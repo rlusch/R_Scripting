@@ -14,3 +14,6 @@ the piece I am participating in is the calculations in the background.  Others w
 on tying in API and UI scripting.
 
 Please use at your own risk and let me know if you have any suggestions.
+
+***I've noticed that other documents in github are written in md, likely to add formatting.
+This document will be revised as a .md in the future.***

@@ -1,0 +1,3 @@
+Time Series
+
+In R using Time Series object can allow some powerful tools to be utilized.  Some of those tools utilize different types of time series objects so it is sometimes necessary to do some complicated manipulations on the data in order to use the tools desired.  Additionally, visualizations of timeseries may be difficult depending on the desired output.  This repository will house scripts and functions that aim to tackle some of these issues.

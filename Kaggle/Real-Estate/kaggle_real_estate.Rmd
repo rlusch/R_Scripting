@@ -1,0 +1,63 @@
+---
+title: "Real Estate Prediction - Kaggle"
+output: html_notebook
+---
+```{r}
+library(dplyr)
+library(tidyr)
+library(corrplot)
+```
+
+This is a notebook compiling the steps and methods used to predict home sale price for the kaggle competition [https://www.kaggle.com/c/house-prices-advanced-regression-techniques].
+
+```{r load_data}
+file_path = file.path("C:", "Users", "l2eve", "Documents", "Kaggle", "train_real-estate.csv")
+df = read.csv(file_path)
+```
+This is a view of the basic structure of the whole data set.  In this competition we are to predict the sale price of the real estate.
+```{r examine_data}
+head(df)
+str(df)
+summary(df)
+```
+
+Below is a histogram of the Sales Price Data to help understand the overall shape of the data.  There are a few outliers that will need to be explained in order to get a solid model, however the full data appears to be pretty close to normal, though it will never have a non-zero so a different distrubution may yield better results.
+
+```{r sales_histogram}
+p = ggplot(df, aes(SalePrice)) +
+        geom_histogram() +
+        ggtitle("Histogram of Sale Price")
+print(p)
+```
+
+
+Below is data that is only numeric in nature, though some of them will likely need to be reclassified as factors.
+```{r select_numeric-only}
+nums = sapply(df, is.numeric)
+head(df[,nums])
+dim(df[,nums])
+```
+```{r, width = 8, height = 8}
+corrplot(cor(df[,nums]))
+```
+
+As a baseline, I will create a regression model based on "intuitive" use of the variables proveded.  Hopefully, after more rigorous analysis each subsequent model will outperform this baseline.
+
+```{r}
+baseline_lm = lm(SalePrice ~ Neighborhood + Condition1 + BldgType + HouseStyle + YearBuilt + TotalBsmtSF + X1stFlrSF + X2ndFlrSF + GarageCars + MoSold + YrSold + SaleType, df)
+test_path = file.path("C:", "Users", "l2eve", "Documents", "Kaggle", "test_real_estate.csv")
+test_df = read.csv(test_path)
+pred_baseline = predict(baseline_lm, test_df)
+summary(baseline_lm)
+summary(pred_baseline)
+plot(pred_baseline)
+class(pred_baseline)
+names(pred_baseline) = seq(from = 1461, to = length(pred_baseline)+1460)
+head(pred_baseline)
+length(pred_baseline)
+pred_baseline[is.na(pred_baseline)] = median(pred_baseline, na.rm = TRUE)
+write_test = file.path("C:", "Users", "l2eve", "Documents", "Kaggle", "baseline_test.csv")
+write.csv(pred_baseline, write_test)
+```
+
+
